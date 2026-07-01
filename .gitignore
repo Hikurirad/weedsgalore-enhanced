@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dataset (do not upload)
+weedsgalore-dataset/
+
+# Training outputs (checkpoints, logs, etc.)
+outputs/
+*.pth
+*.pt
+*.ckpt
+
+# TensorBoard logs
+runs/
+logs/
+
+# Cache
+.cache/
+*.output
+
+# Temp scripts
+run_official_baselines.py
+collect_results.py
+diagnose.py
+
+# Environment variables
+.env
