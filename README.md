@@ -1,4 +1,4 @@
-1# WeedsGalore 增强版 — 多光谱作物杂草语义分割
+WeedsGalore 增强版 — 多光谱作物杂草语义分割
 
 基于 [WeedsGalore](https://github.com/GFZ/weedsgalore) UAV 多光谱数据集（WACV 2025）的系统性消融实验，研究 RGB、原始多光谱波段（MSI）和植被指数（NDVI/NDRE）对作物-杂草分割的贡献。
 
