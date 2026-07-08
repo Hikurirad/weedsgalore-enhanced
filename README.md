@@ -100,15 +100,15 @@ RGB 原图、真实标注（GT）、A3（MSI+VI + CE）预测结果和 M4（MSI+
 
 > **注：** 该结果反映单个训练模型（`best.pth`）对输入通道扰动的敏感性，不等同于通道的因果贡献，且相关通道间存在信息耦合。此外，敏感性分析使用单个 checkpoint，而最终性能报告（84.20%）来自 Top-5 验证集 Ensemble，两者对应的模型状态略有差异。
 
-![通道重要性（Channel Zeroing）](assets/channel_zeroing_msi_vi.png)
+![通道敏感性分析（均值替换）](assets/channel_sensitivity_msi_vi.png)
 
 复现命令：
 
 ```bash
-python channel_zeroing.py \
+python channel_sensitivity.py \
   --ckpt=outputs/M4-a3_ce_dice/best.pth \
   --input_mode=msi_vi \
-  --out_dir=outputs/channel_zeroing
+  --out_dir=outputs/channel_sensitivity
 ```
 
 ---

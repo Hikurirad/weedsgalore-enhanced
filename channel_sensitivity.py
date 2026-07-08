@@ -1,13 +1,13 @@
-"""Channel Zeroing Analysis: measure importance by zeroing each input channel.
+"""Channel Sensitivity Analysis: measure input channel sensitivity via mean replacement.
 
-For each channel, replaces it with zeros (channel mean) at inference time
+For each channel, replaces it with the channel mean (mean replacement, not zero) at inference time
 and measures the drop in mIoU and weed IoU versus the baseline.
 
 Usage:
-    python channel_zeroing.py \
+    python channel_sensitivity.py \
         --ckpt=outputs/M4-a3_ce_dice/best.pth \
         --input_mode=msi_vi \
-        --out_dir=outputs/channel_zeroing
+        --out_dir=outputs/channel_sensitivity
 """
 import os, sys, argparse
 import numpy as np
@@ -77,7 +77,7 @@ def main():
     ap.add_argument('--use_attention', action='store_true')
     ap.add_argument('--dataset_path', default='../weedsgalore-dataset')
     ap.add_argument('--split', default='test')
-    ap.add_argument('--out_dir', default='outputs/channel_zeroing')
+    ap.add_argument('--out_dir', default='outputs/channel_sensitivity')
     args = ap.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -130,7 +130,7 @@ def main():
     axes[0].bar(x, drops_miou, width=w, color=colors_miou, edgecolor='white')
     axes[0].axhline(0, color='black', linewidth=0.8)
     axes[0].set_xticks(x); axes[0].set_xticklabels(ch_names, fontsize=11)
-    axes[0].set_ylabel('mIoU drop (%) when channel zeroed', fontsize=10)
+    axes[0].set_ylabel('mIoU drop (%) when channel replaced with mean', fontsize=10)
     axes[0].set_title(f'Channel Importance — mIoU\n'
                       f'(baseline {baseline["miou"]:.2f}%)', fontsize=11)
     axes[0].grid(axis='y', alpha=0.3)
@@ -138,15 +138,15 @@ def main():
     axes[1].bar(x, drops_weed, width=w, color=colors_weed, edgecolor='white')
     axes[1].axhline(0, color='black', linewidth=0.8)
     axes[1].set_xticks(x); axes[1].set_xticklabels(ch_names, fontsize=11)
-    axes[1].set_ylabel('weed IoU drop (%) when channel zeroed', fontsize=10)
+    axes[1].set_ylabel('weed IoU drop (%) when channel replaced with mean', fontsize=10)
     axes[1].set_title(f'Channel Importance — weed IoU\n'
                       f'(baseline {baseline["iou_weed"]:.2f}%)', fontsize=11)
     axes[1].grid(axis='y', alpha=0.3)
 
-    fig.suptitle(f'Channel Zeroing Analysis  |  {args.input_mode.upper()} input  |  M4 (CE-Dice)',
+    fig.suptitle(f'Channel Sensitivity Analysis — Mean Replacement  |  {args.input_mode.upper()} input  |  M4 (CE-Dice)',
                  fontsize=12)
     plt.tight_layout()
-    out_path = os.path.join(args.out_dir, f'channel_zeroing_{args.input_mode}.png')
+    out_path = os.path.join(args.out_dir, f'channel_sensitivity_{args.input_mode}.png')
     plt.savefig(out_path, dpi=150, bbox_inches='tight')
     print(f'\nSaved: {out_path}')
 
