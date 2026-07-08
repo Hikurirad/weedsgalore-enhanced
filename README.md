@@ -46,7 +46,7 @@ WeedsGalore 增强版 — 多光谱作物杂草语义分割
 | 官方 B2 [1] | MSI | CE | 82.90% | 72.93% | 77.31% | 单 checkpoint（验证集最优） |
 | **本文 M4** | **MSI+VI** | **CE-Dice** | **84.20%** | **76.56%** | **77.61%** | Top-5 验证集 Ensemble |
 
-> 注：官方结果作为参考基线列出。本文 M4 与官方 B2 在输入模态（MSI+VI vs MSI）、损失函数（CE-Dice vs CE）、数据增强策略、多通道 conv1 初始化方式（partial_random vs 官方实现设置）和 checkpoint 选择协议（Top-5 验证集 Ensemble vs 单验证集最优 checkpoint）上均不完全相同。因此，该对比不应理解为严格同协议复现比较，而是同一数据集上的参考性结果对比。
+> 注：官方结果作为参考基线列出。本研究 M4 与官方 B2 在输入模态（MSI+VI vs MSI）、损失函数（CE-Dice vs CE）、数据增强策略、多通道 conv1 初始化方式（partial_random vs 官方实现设置）和 checkpoint 选择协议（Top-5 验证集 Ensemble vs 单验证集最优 checkpoint）上均不完全相同。因此，该对比不应理解为严格同协议复现比较，而是同一数据集上的参考性结果对比。
 
 ### 验证集-测试集排名稳定性（Spearman 相关系数）
 
