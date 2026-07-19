@@ -81,6 +81,15 @@ EXPERIMENTS = {
         'conv1_init': 'partial_random',
         'loss_type': 'ce_dice',
     },
+    'M4-no-NDRE': {
+        'name': 'M4-no-NDRE — MSI+NDVI without NDRE (6ch)',
+        'description': 'Ablation: remove NDRE from M4 to validate channel sensitivity finding.',
+        'input_mode': 'msi_ndvi',
+        'num_classes': 3,
+        'use_attention': False,
+        'conv1_init': 'partial_random',
+        'loss_type': 'ce_dice',
+    },
 }
 
 

@@ -31,7 +31,7 @@ class WeedsGaloreDataset(Dataset):
     https://github.com/GFZ/weedsgalore
     """
 
-    _CH_MAP = {'rgb': 3, 'msi': 5, 'vi': 5, 'msi_vi': 7}
+    _CH_MAP = {'rgb': 3, 'msi': 5, 'vi': 5, 'msi_vi': 7, 'msi_ndvi': 6}
 
     def __init__(self, dataset_path, input_mode='msi', num_classes=3,
                  is_training=True, split='train', augmentation=True,
@@ -86,6 +86,8 @@ class WeedsGaloreDataset(Dataset):
             channels = [red, green, blue, nir, re_band]
         elif self.input_mode == 'vi':
             channels = [red, green, blue, ndvi, ndre]
+        elif self.input_mode == 'msi_ndvi':   # 6ch: MSI + NDVI, no NDRE
+            channels = [red, green, blue, nir, re_band, ndvi]
         else:  # msi_vi
             channels = [red, green, blue, nir, re_band, ndvi, ndre]
 

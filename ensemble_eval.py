@@ -36,6 +36,8 @@ def main():
     ap.add_argument('--splits_dir', default=None)
     ap.add_argument('--topk', type=int, default=5)
     ap.add_argument('--ignore_index', type=int, default=-1)
+    ap.add_argument('--evaluation_split', default='test',
+                    help='Split to evaluate the final ensemble on (default: test)')
     args = ap.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -51,7 +53,8 @@ def main():
 
     ds = WeedsGaloreDataset(args.dataset_path, input_mode=args.input_mode,
                             num_classes=args.num_classes, is_training=False,
-                            split='test', augmentation=False, splits_dir=args.splits_dir)
+                            split=args.evaluation_split, augmentation=False,
+                            splits_dir=args.splits_dir)
     loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=2, drop_last=False)
     in_channels = ds.in_channels
 

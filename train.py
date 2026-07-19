@@ -29,7 +29,7 @@ flags.DEFINE_integer('dataset_size_train', -1, 'limit train size; -1 = use all')
 flags.DEFINE_string(
     'input_mode', 'msi',
     'Input mode: rgb (3ch), msi (5ch, RGB+NIR+RE), vi (5ch, RGB+NDVI+NDRE), '
-    'msi_vi (7ch, RGB+NIR+RE+NDVI+NDRE)'
+    'msi_vi (7ch, RGB+NIR+RE+NDVI+NDRE), msi_ndvi (6ch, RGB+NIR+RE+NDVI, no NDRE)'
 )
 flags.DEFINE_boolean('use_attention', False,
                      'Wrap model with InputChannelAttention')
@@ -300,6 +300,37 @@ def main(_):
 
     print(f"\nTraining complete. Best val mIoU: {best_miou:.2f}%")
     writer.close()
+
+    # Save experiment config for reproducibility
+    import json, subprocess
+    try:
+        git_hash = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD'],
+            cwd=os.path.dirname(os.path.abspath(__file__))
+        ).decode().strip()
+    except Exception:
+        git_hash = 'unknown'
+    config = {
+        'input_mode': FLAGS.input_mode,
+        'num_classes': FLAGS.num_classes,
+        'loss_type': FLAGS.loss_type,
+        'conv1_init': FLAGS.conv1_init,
+        'use_attention': FLAGS.use_attention,
+        'dlv3p_do': FLAGS.dlv3p_do,
+        'pretrained_backbone': FLAGS.pretrained_backbone,
+        'epochs': FLAGS.epochs,
+        'batch_size': FLAGS.batch_size,
+        'lr': FLAGS.lr,
+        'seed': FLAGS.seed,
+        'dataset_path': FLAGS.dataset_path,
+        'splits_dir': FLAGS.splits_dir,
+        'dataset_size_train': FLAGS.dataset_size_train,
+        'best_val_miou': round(best_miou, 4),
+        'git_hash': git_hash,
+    }
+    with open(os.path.join(FLAGS.out_dir, 'config.json'), 'w') as f:
+        json.dump(config, f, indent=2)
+    print(f"Config saved to: {FLAGS.out_dir}/config.json")
 
 
 if __name__ == '__main__':

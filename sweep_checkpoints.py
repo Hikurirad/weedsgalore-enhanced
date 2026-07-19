@@ -56,6 +56,9 @@ def main():
     ap.add_argument('--splits_dir', default=None)
     ap.add_argument('--out_csv', default='sweep.csv')
     ap.add_argument('--ignore_index', type=int, default=-1)
+    ap.add_argument('--include_test', action='store_true',
+                    help='Also compute test mIoU per epoch (for diagnostic analysis only; '
+                         'do NOT use test results to select checkpoints)')
     args = ap.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -79,23 +82,33 @@ def main():
         val_miou, val_ious = eval_split(net, args.dataset_path, args.input_mode,
                                         args.num_classes, 'val', device,
                                         args.ignore_index, args.splits_dir)
-        test_miou, test_ious = eval_split(net, args.dataset_path, args.input_mode,
-                                          args.num_classes, 'test', device,
-                                          args.ignore_index, args.splits_dir)
-        row = {'epoch': epoch, 'val_miou': val_miou, 'test_miou': test_miou}
+        row = {'epoch': epoch, 'val_miou': val_miou}
         for i, v in enumerate(val_ious): row[f'val_c{i}'] = v
-        for i, v in enumerate(test_ious): row[f'test_c{i}'] = v
+
+        if args.include_test:
+            test_miou, test_ious = eval_split(net, args.dataset_path, args.input_mode,
+                                              args.num_classes, 'test', device,
+                                              args.ignore_index, args.splits_dir)
+            row['test_miou'] = test_miou
+            for i, v in enumerate(test_ious): row[f'test_c{i}'] = v
+            print(f'ep{epoch:03d} | val {val_miou:.2f} | test {test_miou:.2f}')
+        else:
+            print(f'ep{epoch:03d} | val {val_miou:.2f}')
+
         rows.append(row)
-        print(f'ep{epoch:03d} | val {val_miou:.2f} | test {test_miou:.2f}')
 
     with open(args.out_csv, 'w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader(); w.writerows(rows)
 
-    best_val  = max(rows, key=lambda r: r['val_miou'])
-    best_test = max(rows, key=lambda r: r['test_miou'])
-    print(f'\nBest val  ep{best_val["epoch"]:03d}: val={best_val["val_miou"]:.2f} test={best_val["test_miou"]:.2f}')
-    print(f'Best test ep{best_test["epoch"]:03d}: val={best_test["val_miou"]:.2f} test={best_test["test_miou"]:.2f}')
+    best_val = max(rows, key=lambda r: r['val_miou'])
+    print(f'\nBest val ep{best_val["epoch"]:03d}: val={best_val["val_miou"]:.2f}')
+    if args.include_test:
+        best_test = max(rows, key=lambda r: r['test_miou'])
+        print(f'Best test ep{best_test["epoch"]:03d}: val={best_test["val_miou"]:.2f} '
+              f'test={best_test["test_miou"]:.2f}')
+        print('NOTE: test mIoU above is for diagnostic analysis only. '
+              'Do NOT use test results to select checkpoints or K.')
     print(f'CSV: {args.out_csv}')
 
 if __name__ == '__main__':
