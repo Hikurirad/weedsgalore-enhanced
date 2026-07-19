@@ -2,7 +2,7 @@ WeedsGalore 增强版 — 多光谱作物杂草语义分割
 
 基于 [WeedsGalore](https://github.com/GFZ/weedsgalore) UAV 多光谱数据集（WACV 2025）的系统性消融实验，研究 RGB、原始多光谱波段（MSI）和植被指数（NDVI/NDRE）对作物-杂草分割的贡献。
 
-**最优结果：** MSI+VI 输入 + CE-Dice 损失 + Top-5 验证集 Ensemble → **84.20% test mIoU**、**77.61% weed IoU**。与官方参考结果的协议差异见表3注释。
+**最优结果：** MSI+VI 输入 + CE-Dice 损失 + Top-5 验证集 Ensemble → **84.20% test mIoU**、**77.61% weed IoU**。Checkpoint 排序完全基于验证集 mIoU，ensemble 规模（K=5）在早期探索中经比较确定，后续实验中固定为统一协议。与官方参考结果的协议差异见表3注释。
 
 ---
 
