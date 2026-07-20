@@ -1,20 +1,3 @@
-#!/usr/bin/env python
-"""Experiment launcher — runs train + eval for a given experiment.
-
-Usage:
-    python experiments/run_experiment.py --exp=A5 --dataset_path=../weedsgalore-dataset
-    python experiments/run_experiment.py --exp=B1,B2,B3 --dataset_path=... --epochs=20
-
-    Or run all experiments:
-    python experiments/run_experiment.py --exp=ALL --dataset_path=...
-
-Experiment names:
-    Group 1 (Baseline):   B1, B2, B3
-    Group 2 (VI):         E1, E2
-    Group 3 (Wavelet):    W1, W2
-    Group 4 (Attention):  A1, A2, A3, A4, A5
-"""
-
 from absl import app, flags
 import subprocess
 import sys
